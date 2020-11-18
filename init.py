@@ -27,30 +27,18 @@ def main():
         sys.stdout.write(line)
 
     # ログリセット
-    dir_log = join(dir_scr, "log")
-    if isdir(dir_log):
-        _input = input("remove logs. ok? (y/*) :").lower()
-        if _input in ["y", "yes"]:
-            # ボリューム削除
-            print("[info] reset log volume.")
-            shutil.rmtree(dir_log)
+    fn.rmdir(join(dir_scr, "log"))
 
     # ソースリセット
-    dir_src = join(dir_scr, "src")
-    if isdir(dir_src):
-        _input = input("remove app. ok? (y/*) :").lower()
-        if _input in ["y", "yes"]:
-            # ボリューム削除
-            print("[info] reset app volume.")
-            shutil.rmtree(dir_src)
+    fn.rmdir(join(dir_scr, "src"))
 
     # コンテナ作成
     for line in fn.cmdlines(_cmd=f"docker-compose up -d"):
         sys.stdout.write(line)
 
-    docker_exec = "docker exec -it app-php"
+    docker_exec = "docker exec -it node-app-laravel"
 
-    dir_app = join(dir_src, params['APP_NAME'])
+    dir_app = join(dir_scr, "src", params['APP_NAME'])
     if not isdir(dir_app):
         if params['GIT_REPO'] == "":
             cmd = f"{docker_exec} composer create-project --prefer-dist laravel/laravel={params['LARAVEL_VER']} {params['APP_NAME']}"
